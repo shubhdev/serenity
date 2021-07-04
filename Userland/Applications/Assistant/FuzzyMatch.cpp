@@ -42,7 +42,7 @@ static FuzzyMatchResult fuzzy_match_recursive(String const& needle, String const
     bool first_match = true;
     while (needle_idx < needle.length() && haystack_idx < haystack.length()) {
 
-        if (needle.substring_view(needle_idx, 1).equals_ignoring_case(haystack.substring_view(haystack_idx, 1))) {
+        if (to_ascii_lowercase(needle[needle_idx]) == to_ascii_lowercase(haystack[haystack_idx])) {
             if (next_match >= MAX_MATCHES)
                 return { false, out_score };
 
@@ -91,7 +91,7 @@ static FuzzyMatchResult fuzzy_match_recursive(String const& needle, String const
                 u32 current_character = haystack[current_idx];
                 u32 neighbor_character = haystack[current_idx - 1];
 
-                if (neighbor_character != to_ascii_uppercase(neighbor_character) && current_character != to_ascii_lowercase(current_character))
+                if (is_ascii_lower_alpha(neighbor_character) && is_ascii_upper_alpha(current_character))
                     out_score += CAMEL_BONUS;
 
                 if (neighbor_character == '_' || neighbor_character == ' ')
